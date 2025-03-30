@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events</title>
+    <link rel="shortcut icon" href="assets/01.jpg" type="jpg">
+    <link rel="stylesheet" href="css/events.css">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <header class="navbar">
+        <div class="navbar-logo">
+            <img src="assets/01.jpg" alt="EventSync Logo">  <!-- Update with your actual logo path -->
+        </div>
+        
+        <h1 class="navbar-title">All Active Events</h1>
+
+        <ul class="navbar-links">
+            <li><a id="home-button" href="main2.html">Home</a></li>
+        </ul>
+    </header>
+
+    <main>
+        <div id="events-container"></div>
+    </main>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="delete-modal" class="modal">
+        <div class="modal-content">
+            <h2>Are you sure?</h2>
+            <p>This action cannot be undone.</p>
+            <button id="confirm-delete">Yes, Delete</button>
+            <button id="cancel-delete">Cancel</button>
+        </div>
+    </div>
+
+    <script src="events.js"></script>
+</body>
+</html>

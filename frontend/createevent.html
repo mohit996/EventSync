@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Event</title>
+    <link rel="stylesheet" href="css/createevent.css">
+    <link rel="shortcut icon" href="assets/01.jpg" type="jpg">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo-container">
+            <img src="assets/01.jpg" alt="EventSync Logo" class="logo">
+        </div>
+        <ul class="nav-links">
+            <li><a href="/index.html">Home</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <div class="left-section">
+            <div class="content">
+                <h1>Ready to Host an Event?</h1>
+                <p>Use our platform to create and manage events effortlessly.</p>
+                <p class="slogan">"Bring people together with ease and efficiency."</p>
+            </div>
+        </div>
+        <div class="right-section">
+            <div class="form-container">
+                <div class="create"><h2>Create an Event</h2></div>
+                <form>
+                    <label for="event-name">Event Name</label>
+                    <input type="text" id="event_name" placeholder="Enter event name" required>
+
+                    <label for="category">Category</label>
+                    <select id="category">
+                        <option value="conference">Conference</option>
+                        <option value="workshop">Workshop</option>
+                        <option value="webinar">Webinar</option>
+                    </select>
+
+                    <label for="date">Event Date</label>
+                    <input type="date" id="date" required>
+
+                    <label for="venue">Venue</label>
+                    <input type="text" id="venue" placeholder="Enter venue" required>
+
+                    <label for="description">Event Description</label>
+                    <textarea id="description" placeholder="Enter event details" required></textarea>
+			
+		             <label for="time">Time</label>
+                    <input type="time" id="event_time" placeholder="Enter event time" required>
+
+                    <label for="banner">Upload Event Banner</label>
+                    <input type="file" id="banner" accept="image/*">
+
+                    <label for="attendees">Max Attendees</label>
+                    <input type="number" id="attendees" placeholder="Enter max attendees" required>
+
+                    <div class="button-group">
+                        <button type="reset" class="btn">Reset</button>
+                        <button type="submit" class="btn2">Create Event</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="createevent.js"></script>
+</body>
+</html>

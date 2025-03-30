@@ -1,0 +1,246 @@
+/* Global Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #420000; /* Dark Background */
+    color: #fff; /* Light Text */
+}
+
+/* Navbar */
+.navbar {
+    background-color: #220808; /* Matching background color */
+    padding: 15px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.901);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.navbar .logo {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #FFD700; /* Gold */
+    text-shadow: 2px 2px 5px rgba(255, 215, 0, 0.7);
+    padding-left: 20px;
+}
+
+.navbar ul {
+    list-style: none;
+    display: flex;
+    margin-right: 20px;
+}
+
+.navbar ul li {
+    margin: 0 15px;
+}
+.navbar ul li.active a{
+    background: #FFD700; 
+    color: #8B0000;
+}
+
+.navbar ul li a {
+    color: #FFD700; /* Gold */
+    font-size: 1.1rem;
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: 0.3s;
+    font-weight: 600;
+}
+
+.navbar ul li a:hover {
+    background: #FFD700; 
+    color: #8B0000;
+    box-shadow: 0 3px 10px rgba(255, 215, 0, 0.5);
+}
+
+/* Logo Hover Animation */
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.logo-container img {
+    width: 60px; 
+    transition: transform 0.5s ease-in-out;
+        
+}
+
+
+/* Hero Section */
+.hero {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 90vh;
+    background: url('../assets/5.jpg') no-repeat center center/cover;
+    position: relative;
+}
+
+.hero::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Dark Overlay */
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+}
+
+.hero h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #ffcc00; /* Golden Text */
+    text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.7);
+}
+
+.hero p {
+    font-size: 1.2rem;
+    margin-top: 10px;
+    color: white;
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    padding: 12px 25px;
+    font-size: 1rem;
+    border-radius: 5px;
+    margin: 10px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn-green {
+    background-color: #007c1d;
+    color: white;
+}
+
+.btn-blue {
+    background-color: #00244b;
+    color: white;
+}
+
+.btn:hover {
+    transform: scale(1.1);
+}
+
+/* Features Section */
+.features {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    padding: 50px;
+    background-color: #222;
+    border-top: 5px solid #ffcc00; /* Gold Border */
+}
+
+
+.features {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    padding: 50px;
+    background-color: #222;
+    border-top: 5px solid #ffcc00; /* Gold Border */
+    color: white; /* Ensure text is visible */
+}
+
+/* Feature Item Layout */
+.feature-item {
+    display: flex;
+    align-items: center;  /* Align items vertically */
+    gap: 15px;  /* Space between image and text */
+    max-width: 800px; /* Restrict max width */
+    margin-bottom: 20px; /* Space between items */
+}
+
+/* Feature Icons */
+.feature-item img {
+    width: 50px; /* Adjust icon size */
+    height: 50px;
+    object-fit: contain;
+}
+
+/* Feature Text */
+.feature-text {
+    display: flex;
+    flex-direction: column;
+    text-align: left; /* Align text to the left */
+}
+
+/* Feature Title */
+.feature-text h3 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/* Feature Description */
+.feature-text p {
+    margin: 5px 0 0;
+    font-size: 16px;
+}
+
+.feature-box:hover {
+    transform: scale(1.05);
+}
+
+/* Footer */
+.footer {
+    text-align: center;
+    padding: 20px;
+    background: #111;
+    color: white;
+    font-size: 0.9rem;
+}
+
+#foot{
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    
+    }
+
+    .footer a{
+        color: rgba(224, 233, 95, 0.836);
+        box-shadow: #071d31;
+    }
+
+ /* Container animation for smooth transition */
+.page-transition {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    z-index: 9999;
+    animation: slideOut 0.7s ease-in-out forwards;
+}
+
+/* Keyframes for sliding effect */
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+}
+
