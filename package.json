@@ -13,12 +13,8 @@
   "version": "1.0.0",
   "description": "backend",
   "main": "backend/server.js",
-  "engines": {
-    "node": ">=14.0.0"
-  },
   "scripts": {
     "start": "node backend/server.js",
-    "build": "echo 'Build step not required'",
     "dev": "nodemon backend/server.js"
   },
   "author": "",

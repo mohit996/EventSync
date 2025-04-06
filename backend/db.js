@@ -1,26 +1,14 @@
 require('dotenv').config({ path: __dirname + '/.env' });
 const mongoose = require('mongoose');
 
-const uri = process.env.MONGODB_URI;
-
-if (!uri) {
-    console.error('MONGODB_URI environment variable is not set');
-    process.exit(1);
-}
+const uri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/EventSync';
 
 mongoose.connect(uri, {
     useNewUrlParser: true,
-    useUnifiedTopology: true,
-    retryWrites: true,
-    w: 'majority',
-    serverApi: {
-        version: '1',
-        strict: true,
-        deprecationErrors: true,
-    }
+    useUnifiedTopology: true
 })
 .then(() => {
-    console.log('Successfully connected to MongoDB Atlas');
+    console.log('Successfully connected to local MongoDB');
 })
 .catch((err) => {
     console.error('MongoDB connection error:', err);

@@ -10,8 +10,8 @@ const Event = require("./models/event");
 const app = express();
 const port = process.env.PORT || 3001;
 
-// Update MongoDB connection to use environment variable
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/usersdatabase';
+// MongoDB connection (local)
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/EventSync';
 
 // Update static file serving
 app.use(express.static(path.join(__dirname, "../frontend")));
