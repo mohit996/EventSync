@@ -98,74 +98,103 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    // Test server connection first
+    async function testServerConnection() {
+        try {
+            const response = await fetch('/api/test');
+            if (!response.ok) {
+                throw new Error('Server test failed');
+            }
+            return true;
+        } catch (error) {
+            console.error('Server connection test failed:', error);
+            return false;
+        }
+    }
+
     async function submitForm() {
         const formData = {
-            username: user_name.value, // Ensure this is not undefined
+            username: user_name.value,
             email: email_input.value,
             password: password_input.value
         };
-    
-        console.log("Form Data Being Sent:", formData); // Debugging
-    
+
         try {
-            const response = await fetch("/signup", {
+            // Test connection first
+            const isConnected = await testServerConnection();
+            if (!isConnected) {
+                error_message.innerText = "Server connection error. Please try again later.";
+                return;
+            }
+
+            const response = await fetch("/api/signup", {  // Updated path
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify(formData)
             });
-    
+
             const data = await response.json();
-            console.log("Server Response:", data); // Debugging
-    
+
             if (response.ok) {
-                console.log("Signup successful");
                 if (data.userId) {
                     localStorage.setItem("userId", data.userId);
+                    window.location.href = "/main2.html";
                 }
-                window.location.href = "/main2.html";
             } else {
-                error_message.innerText = data.message || "Signup failed.";
+                error_message.innerText = data.message || "Signup failed";
             }
         } catch (error) {
-            console.error("Error:", error);
-            error_message.innerText = "Something went wrong. Please try again";
+            console.error("Network error:", error);
+            error_message.innerText = "Server connection error. Please try again later.";
         }
     }
-    
 
     async function submitSignInForm() {
+        const error_message = document.getElementById('error-message');
         const formData = {
             email: email_input.value,
             password: password_input.value
         };
 
         try {
+            // Test server connection first
+            const testResponse = await fetch('/api/test', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!testResponse.ok) {
+                throw new Error('Server test failed');
+            }
+
             const response = await fetch("/signin", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                },
                 body: JSON.stringify(formData)
             });
 
             const data = await response.json();
+            console.log('Server response:', data); // For debugging
 
             if (response.ok) {
-                console.log("Signin successful");
-
-                // ✅ Store userId in localStorage after signin
                 if (data.userId) {
                     localStorage.setItem("userId", data.userId);
+                    window.location.href = "/main2.html";
+                } else {
+                    error_message.innerText = "Login successful but no user ID received";
                 }
-
-                removeSignupElements();
-                window.location.href = "/main2.html";
             } else {
-                error_message.innerText = data.message;
+                error_message.innerText = data.message || "Sign in failed";
             }
         } catch (error) {
-            console.error("Error:", error);
-            error_message.innerText = "Something went wrong. Please try again.";
+            console.error("Network error:", error);
+            error_message.innerText = "Server connection error. Please try again.";
         }
     }
 

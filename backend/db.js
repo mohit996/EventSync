@@ -1,17 +1,36 @@
-const mongoose=require('mongoose')
+require('dotenv').config({ path: __dirname + '/.env' });
+const mongoose = require('mongoose');
 
-const mongoURL='mongodb://127.0.0.1:27017/usersdatabase'
+const uri = process.env.MONGODB_URI;
 
-mongoose.connect(mongoURL);
+if (!uri) {
+    console.error('MONGODB_URI environment variable is not set');
+    process.exit(1);
+}
 
-
-
-
-const db=mongoose.connection;
-
-db.on('connected',()=>{
-    console.log('Mongodb connected')
+mongoose.connect(uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    retryWrites: true,
+    w: 'majority',
+    serverApi: {
+        version: '1',
+        strict: true,
+        deprecationErrors: true,
+    }
 })
+.then(() => {
+    console.log('Successfully connected to MongoDB Atlas');
+})
+.catch((err) => {
+    console.error('MongoDB connection error:', err);
+    process.exit(1);
+});
 
+const db = mongoose.connection;
 
-module.exports=mongoose;
+db.on('error', (err) => {
+    console.error('MongoDB connection error:', err);
+});
+
+module.exports = mongoose;
