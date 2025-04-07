@@ -105,6 +105,8 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!response.ok) {
                 throw new Error('Server test failed');
             }
+            const data = await response.json();
+            console.log('Server test response:', data); // Debug log
             return true;
         } catch (error) {
             console.error('Server connection test failed:', error);
@@ -160,18 +162,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
         try {
             // Test server connection first
-            const testResponse = await fetch('/api/test', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-
-            if (!testResponse.ok) {
-                throw new Error('Server test failed');
+            const isConnected = await testServerConnection();
+            if (!isConnected) {
+                error_message.innerText = "Server connection error. Please try again later.";
+                return;
             }
 
-            const response = await fetch("/signin", {
+            console.log('Attempting signin...'); // Debug log
+
+            const response = await fetch("/api/signin", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -179,8 +178,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 body: JSON.stringify(formData)
             });
 
+            // Check if response is JSON
+            const contentType = response.headers.get("content-type");
+            if (!contentType || !contentType.includes("application/json")) {
+                throw new Error("Server returned non-JSON response");
+            }
+
             const data = await response.json();
-            console.log('Server response:', data); // For debugging
+            console.log('Server response:', data); // Debug log
 
             if (response.ok) {
                 if (data.userId) {

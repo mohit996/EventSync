@@ -1,150 +1,124 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function() {
     fetchEvents();
 });
 
-document.addEventListener("DOMContentLoaded", function () {
-    fetchEvents();
-});
-
-function fetchEvents() {
-    fetch("/events")
-        .then(response => response.json())
-        .then(events => {
-            console.log("Fetched events:", events);
-            const container = document.getElementById("events-container");
-            container.innerHTML = ""; 
-
-            events.forEach(event => {
-                const eventCard = document.createElement("div");
-                eventCard.classList.add("event-card");
-
-                // Create image element
-                const eventImage = document.createElement("img");
-                eventImage.src = event.image || 'https://via.placeholder.com/200';
-                eventImage.alt = "Event Image";
-                eventImage.classList.add("event-image");
-
-                // Check if event is full
-                const currentAttendees = event.currentAttendees || 0;
-                const maxAttendees = event.maxAttendees || Infinity;
-                const isFull = currentAttendees >= maxAttendees;
-                const isRegistered = event.isRegistered || false; // Assuming backend sends this info
-
-                // Create event details container
-                const eventDetails = document.createElement("div");
-                eventDetails.classList.add("event-details");
-                eventDetails.innerHTML = `
-                    <h3>${event.title}</h3>
-                    <p><strong>Category:</strong> ${event.category}</p>
-                    <p><strong>Date:</strong> ${new Date(event.date).toDateString()}</p>
-                    <p><strong>Time:</strong> ${event.time}</p>
-                    <p><strong>Venue:</strong> ${event.location || "TBD"}</p>
-                    <p><strong>Description:</strong> ${event.description}</p>
-                    <p><strong>Attendees:</strong> ${currentAttendees}/${maxAttendees}</p>
-                    <button class="btn register-btn" data-id="${event._id}" 
-                        style="background-color: ${isFull || isRegistered ? 'grey' : 'blue'}; color: white;" 
-                        ${isFull || isRegistered ? "disabled" : ""}>
-                        ${isRegistered ? "Registered" : isFull ? "Full" : "Register"}
-                    </button>
-                    <button class="btn delete-btn" data-id="${event._id}">Delete</button>
-                `;
-
-                // Append image and details to event card
-                eventCard.appendChild(eventImage);
-                eventCard.appendChild(eventDetails);
-
-                // Append the event card to the container
-                container.appendChild(eventCard);
-            });
-
-            // Add event listeners to Register buttons
-            document.querySelectorAll(".register-btn").forEach(button => {
-                button.addEventListener("click", function () {
-                    const eventId = this.getAttribute("data-id");
-
-                    if (!this.disabled) {
-                        registerForEvent(eventId, this);
-                    }
-                });
-            });
-
-            // Add event listeners to Delete buttons
-            document.querySelectorAll(".delete-btn").forEach(button => {
-                button.addEventListener("click", function () {
-                    const eventId = this.getAttribute("data-id");
-                    showDeleteConfirmation(eventId);
-                });
-            });
-        })
-        .catch(error => console.error("Error fetching events:", error));
+async function fetchEvents() {
+    try {
+        const response = await fetch("/api/events");
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const events = await response.json();
+        displayEvents(events);
+    } catch (error) {
+        console.error("Error fetching events:", error);
+        document.getElementById("events-container").innerHTML = 
+            `<p class="error-message">Error loading events. Please try again later.</p>`;
+    }
 }
 
-// Function to register for an event
+function displayEvents(events) {
+    const container = document.getElementById("events-container");
+    container.innerHTML = "";
+
+    events.forEach(event => {
+        const eventCard = createEventCard(event);
+        container.appendChild(eventCard);
+    });
+}
+
+function createEventCard(event) {
+    const eventCard = document.createElement("div");
+    eventCard.classList.add("event-card");
+
+    const eventImage = document.createElement("img");
+    eventImage.src = event.image || 'https://via.placeholder.com/200';
+    eventImage.alt = "Event Image";
+    eventImage.classList.add("event-image");
+
+    const currentAttendees = event.currentAttendees || 0;
+    const maxAttendees = event.maxAttendees || Infinity;
+    const isFull = currentAttendees >= maxAttendees;
+    const isRegistered = event.registeredUsers?.includes(localStorage.getItem("userId"));
+
+    const eventDetails = document.createElement("div");
+    eventDetails.classList.add("event-details");
+    eventDetails.innerHTML = `
+        <h3>${event.title}</h3>
+        <p><strong>Category:</strong> ${event.category}</p>
+        <p><strong>Date:</strong> ${new Date(event.date).toDateString()}</p>
+        <p><strong>Time:</strong> ${event.time}</p>
+        <p><strong>Venue:</strong> ${event.location}</p>
+        <p><strong>Description:</strong> ${event.description}</p>
+        <p><strong>Attendees:</strong> ${currentAttendees}/${maxAttendees}</p>
+        <button class="btn register-btn" data-id="${event._id}" 
+            ${isFull || isRegistered ? "disabled" : ""}>
+            ${isRegistered ? "Registered" : isFull ? "Full" : "Register"}
+        </button>
+        <button class="btn delete-btn" data-id="${event._id}">Delete</button>
+    `;
+
+    eventCard.appendChild(eventImage);
+    eventCard.appendChild(eventDetails);
+
+    // Add event listeners
+    const registerBtn = eventDetails.querySelector(".register-btn");
+    registerBtn.addEventListener("click", () => registerForEvent(event._id));
+
+    const deleteBtn = eventDetails.querySelector(".delete-btn");
+    deleteBtn.addEventListener("click", () => showDeleteConfirmation(event._id));
+
+    return eventCard;
+}
+
 async function registerForEvent(eventId) {
     const userId = localStorage.getItem("userId");
-
     if (!userId) {
-        alert("You must be signed in to register for an event.");
+        alert("Please sign in to register for events");
         return;
     }
 
     try {
-        const response = await fetch(`/register/${eventId}`, {
+        const response = await fetch(`/api/register/${eventId}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ userId })
         });
 
-        const data = await response.json();
-
-        if (response.ok) {
-            alert(data.message);
-        } else {
-            alert(data.message);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
+
+        const data = await response.json();
+        alert(data.message);
+        fetchEvents(); // Refresh the events list
     } catch (error) {
         console.error("Error:", error);
-        alert("Something went wrong. Please try again.");
+        alert("Error registering for event: " + error.message);
     }
 }
 
-
-
-
-// Show delete confirmation modal
-function showDeleteConfirmation(eventId) {
-    const modal = document.getElementById("delete-modal");
-
-    if (!modal) {
-        console.error("Delete modal not found in the DOM.");
-        return;
-    }
-
-    modal.style.display = "block";
-    modal.setAttribute("data-event-id", eventId);
-
-    document.getElementById("confirm-delete").onclick = () => {
-        deleteEvent(eventId);
-        modal.style.display = "none";
-    };
-
-    document.getElementById("cancel-delete").onclick = () => {
-        modal.style.display = "none";
-    };
-}
-
-// Function to delete an event
 async function deleteEvent(eventId) {
     try {
-        const response = await fetch(`/events/${eventId}`, { method: "DELETE" });
-        const result = await response.json();
+        const response = await fetch(`/api/events/${eventId}`, {
+            method: "DELETE"
+        });
 
-        if (response.ok) {
-            fetchEvents(); // ✅ Refresh event list silently after deletion
-        } else {
-            alert("Error deleting event: " + result.message);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
+
+        const data = await response.json();
+        alert(data.message);
+        fetchEvents(); // Refresh the events list
     } catch (error) {
-        console.error("Error deleting event:", error);
+        console.error("Error:", error);
+        alert("Error deleting event: " + error.message);
+    }
+}
+
+function showDeleteConfirmation(eventId) {
+    if (confirm("Are you sure you want to delete this event?")) {
+        deleteEvent(eventId);
     }
 }

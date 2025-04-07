@@ -226,13 +226,19 @@ header {
     transform: scale(1.05);
 }
 
-/* View Details Button */
-.view-btn {
+/* Register Button */
+.register-btn {
     background-color: #007bff;
 }
 
-.view-btn:hover {
+.register-btn:hover {
     background-color: #0056b3;
+}
+
+.register-btn:disabled {
+    background-color: #007bff;
+    opacity: 0.7;
+    cursor: not-allowed;
 }
 
 /* Delete Button */

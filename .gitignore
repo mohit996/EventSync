@@ -1,2 +1,16 @@
-node_modules/
+# Dependencies
+/node_modules
+
+# Environment variables
 .env
+
+# Upload directory
+/backend/uploads/*
+!/backend/uploads/.gitkeep
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
